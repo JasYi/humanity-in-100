@@ -1,0 +1,67 @@
+body{
+
+}
+
+h1{
+  text-align: center;
+  color: black;
+}
+
+h3{
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  text-align: center;
+  color: black;
+}
+
+.topnav {
+  position: relative; /*CHANGE LATER*/
+  overflow: hidden;
+  border-radius: 10px;
+  margin: 10px;
+}
+
+.topnav ul{
+  text-align: center;
+}
+
+.topnav li{
+  display: inline;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  display: inline-block;
+  float: center;
+
+  font-family: 'Playfair Display', serif;
+  font-style: normal;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  color: black;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  text-decoration: underline;
+}
+
+/* Add an active class to highlight the current page */
+.topnav a.active {
+  background-color: #ec524b; /*CHANGE LATER*/
+  color: white;
+}
+
+.svg{
+  background-color: black;
+  padding-right: 20px;
+  padding-left: 0px;
+}
+
+.svg svg{
+  preserveAspectRatio: none;
+  height: auto;
+  width: 100%;
+}
