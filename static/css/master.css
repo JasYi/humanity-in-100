@@ -1,3 +1,8 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
 body{
 
 }
@@ -14,54 +19,27 @@ h3{
   color: black;
 }
 
-.topnav {
-  position: relative; /*CHANGE LATER*/
-  overflow: hidden;
-  border-radius: 10px;
-  margin: 10px;
-}
-
-.topnav ul{
+#navbar button{
   text-align: center;
-}
-
-.topnav li{
-  display: inline;
-}
-
-/* Style the links inside the navigation bar */
-.topnav a {
-  display: inline-block;
-  float: center;
-
-  font-family: 'Playfair Display', serif;
-  font-style: normal;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
-  color: black;
-}
-
-/* Change the color of links on hover */
-.topnav a:hover {
-  text-decoration: underline;
-}
-
-/* Add an active class to highlight the current page */
-.topnav a.active {
-  background-color: #ec524b; /*CHANGE LATER*/
-  color: white;
 }
 
 .svg{
-  background-color: black;
-  padding-right: 20px;
-  padding-left: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.svg svg{
+  background-color: black;
+  padding: 0;
+  width: 100%;
+}
+
 
 .svg svg{
   preserveAspectRatio: none;
   height: auto;
   width: 100%;
+  display: block;
+  margin: auto;
 }

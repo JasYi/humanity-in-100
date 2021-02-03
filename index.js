@@ -13,12 +13,12 @@ app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, 'static')));
 
 //SQL setup
-/*var sql_params = {
+var sql_params = {
   connectionLimit : 10, //replace with info from the site
   user            : 'b2335052490792',
   password        : 'c4e29ae3',
   host            : 'us-cdbr-east-03.cleardb.com',
-}*/
+}
 
 app.get('/', function(req, res){
     res.render('index');
