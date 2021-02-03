@@ -31,12 +31,3 @@ app.get('/form', function(req, res){
 var listener = app.listen(app.get('port'), function() {
   console.log( 'Express server started on port: '+listener.address().port );
 });
-
-
-mysql://
-
-:
-c4e29ae3
-@
-us-cdbr-east-03.cleardb.com
-/heroku_24a377e027a75d5?reconnect=true
