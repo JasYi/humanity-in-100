@@ -2,15 +2,24 @@ var express = require('express');
 var hbs = require('hbs');
 var path = require('path');
 var mysql = require('mysql');
+var bodyParser = require('body-parser');
+
+//PORT TO DIRECTOR FOR SQL TESTING
 
 //form submits to seperate helper page which is defined in main js file which does the sql stuff then
 //helper page then goes back to map page
+//use cookie to limit ppl to one response per device
+//login maybe with usename and password
 
 var app = express();
 
 app.set('port', process.env.PORT || 8080);
 app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, 'static')));
+
+//body parser setup
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 //SQL setup
 var sql_params = {
@@ -20,12 +29,41 @@ var sql_params = {
   host            : 'us-cdbr-east-03.cleardb.com',
 }
 
-app.get('/', function(req, res){
+var pool = mysql.createPool(sql_params);
+
+function findID(req, res, next){
+  pool.query('SELECT id FROM stories ORDER BY id DESC', function(error, results, field){
+    if(error) throw error;
+
+    console.log(results);
+    res.locals.id = results[0] + 1;
+    next();
+  })
+}
+
+function addData(req, res, next){ //try to find way to load regular main page if no query and if there are queries then go into this one
+  var name = req.body.name + "";
+  var countryID = req.body.country[1] + "";
+  var countryName = req.body.country[0] + "";
+  var story = req.body.story + "";
+  var id = res.locals.id + "";
+
+  pool.query('INSERT INTO stories(id, p_name, country_id, country_name, message) VALUE (?, ?, ?, ?, ?)', [id, name, countryID, countryName], story, function(error, results, field){
+    if(error) throw error;
+    next()
+  })
+}
+
+app.get('/', function(req, res){//figure out how to bypass query check when queries aren't there
     res.render('index');
 })
 
 app.get('/form', function(req, res){
   res.render('form');
+})
+
+app.post('/form_helper',findID, addData ,function(req, res, next){
+  res.redirect('/');
 })
 
 var listener = app.listen(app.get('port'), function() {
