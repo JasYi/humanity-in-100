@@ -24,31 +24,41 @@ app.use(bodyParser.json())
 //SQL setup
 var sql_params = {
   connectionLimit : 10, //replace with info from the site
-  user            : 'b2335052490792',
-  password        : 'c4e29ae3',
-  host            : 'us-cdbr-east-03.cleardb.com',
+  user            : process.env.CLEARDB_DATABASE_USERNAME,
+  password        : process.env.CLEARDB_DATABASE_PASSWORD,
+  host            : process.env.CLEARDB_DATABASE_HOST,
+  port            : process.env.CLEARDB_DATABASE_PORT,
+  database        : process.env.CLEARDB_DATABASE_NAME
 }
 
 var pool = mysql.createPool(sql_params);
 
 function findID(req, res, next){
+    console.log('test 1');
   pool.query('SELECT id FROM stories ORDER BY id DESC', function(error, results, field){
-    if(error) throw error;
+    if(error){
+        res.locals.id = results[0].id;
+        throw error;
+    }
 
-    console.log(results);
-    res.locals.id = results[0] + 1;
+    console.log(results[0].id);
+    res.locals.id = results[0].id + 1;
     next();
   })
 }
 
 function addData(req, res, next){ //try to find way to load regular main page if no query and if there are queries then go into this one
   var name = req.body.name + "";
-  var countryID = req.body.country[1] + "";
-  var countryName = req.body.country[0] + "";
+  var countryName = req.body.country.substring(2) + "";
+  console.log(countryName.indexOf(","));
+  countryName = countryName.substring(0, countryName.indexOf(",") - 1);
+  var countryID = req.body.country;
+  countryID = countryID.substring(countryID.indexOf("]")-3, countryID.indexOf(']') - 1);
+  console.log(typeof countryID);
   var story = req.body.story + "";
   var id = res.locals.id + "";
 
-  pool.query('INSERT INTO stories(id, p_name, country_id, country_name, message) VALUE (?, ?, ?, ?, ?)', [id, name, countryID, countryName], story, function(error, results, field){
+  pool.query('INSERT INTO stories(id, p_name, country_id, country_name, message) VALUE (?, ?, ?, ?, ?)', [id, name, countryID, countryName, story], function(error, results, field){
     if(error) throw error;
     next()
   })
