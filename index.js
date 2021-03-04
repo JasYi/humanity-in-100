@@ -52,7 +52,7 @@ client.query('SELECT NOW()', (err, res) => {
 function findID(req, res, next){
     console.log('test 1');
     var results;
-    const text = 'SELECT id FROM stories' //postgres query
+    const text = 'SELECT ID FROM stories' //postgres query
     // callback
     client.query(text, (err, res) => {
       if (err) {
@@ -62,7 +62,7 @@ function findID(req, res, next){
       }
     })
 
-    console.log(results);
+    console.log(results); //finding problems here, results return undefined try to find a way to get results
     res.locals.id = results[0] + 1;
     next();
   }
