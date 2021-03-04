@@ -65,7 +65,7 @@ function findID(req, res, next){
     console.log(results[0].id);
     res.locals.id = results[0].id + 1;
     next();
-  })
+  }
 }
 
 function addData(req, res, next){ //try to find way to load regular main page if no query and if there are queries then go into this one
