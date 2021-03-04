@@ -3,6 +3,7 @@ var hbs = require('hbs');
 var path = require('path');
 var mysql = require('mysql');
 var bodyParser = require('body-parser');
+const { Pool, Client } = require('pg')
 
 //PORT TO DIRECTOR FOR SQL TESTING
 
@@ -21,25 +22,45 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-//SQL setup
-var sql_params = {
-  connectionLimit : 10, //replace with info from the site
-  user            : process.env.CLEARDB_DATABASE_USERNAME,
-  password        : process.env.CLEARDB_DATABASE_PASSWORD,
-  host            : process.env.CLEARDB_DATABASE_HOST,
-  port            : process.env.CLEARDB_DATABASE_PORT,
-  database        : process.env.CLEARDB_DATABASE_NAME
-}
 
-var pool = mysql.createPool(sql_params);
+//postgreSQL setup
+const pool = new Pool({
+  user: 'wulsybzdvojhgv',
+  host: 'ec2-67-202-63-147.compute-1.amazonaws.com',
+  database: 'd2rve0f27u9c6m',
+  password: '84abfd333b0d8b77f9feabab26ae262998d1b965ac2cdf6fb748fc92d4e65043',
+  port: 5432,
+})
+pool.query('SELECT NOW()', (err, res) => {
+  console.log(err, res)
+  pool.end()
+})
+const client = new Client({
+  user: 'wulsybzdvojhgv',
+  host: 'ec2-67-202-63-147.compute-1.amazonaws.com',
+  database: 'd2rve0f27u9c6m',
+  password: '84abfd333b0d8b77f9feabab26ae262998d1b965ac2cdf6fb748fc92d4e65043',
+  port: 5432,
+})
+client.connect()
+client.query('SELECT NOW()', (err, res) => {
+  console.log(err, res)
+  client.end()
+})
+
 
 function findID(req, res, next){
     console.log('test 1');
-  pool.query('SELECT id FROM stories ORDER BY id DESC', function(error, results, field){
-    if(error){
-        res.locals.id = results[0].id;
-        throw error;
-    }
+    var results;
+    const text = 'SELECT id FROM stories' //postgres query
+    // callback
+    client.query(text, (err, res) => {
+      if (err) {
+        console.log(err.stack)
+      } else {
+        results = res.rows;
+      }
+    })
 
     console.log(results[0].id);
     res.locals.id = results[0].id + 1;
@@ -58,10 +79,17 @@ function addData(req, res, next){ //try to find way to load regular main page if
   var story = req.body.story + "";
   var id = res.locals.id + "";
 
-  pool.query('INSERT INTO stories(id, p_name, country_id, country_name, message) VALUE (?, ?, ?, ?, ?)', [id, name, countryID, countryName, story], function(error, results, field){
-    if(error) throw error;
-    next()
+  const text = 'INSERT INTO stories(ID, NAME, COUNTRYNAME, COUNTRYID, STORY) VALUES($1, $2, $3, $4, $5) RETURNING *' //postgres query
+  var values = [id, name, countryName, countryID, story];
+  // callback
+  client.query(text, values, (err, res) => {
+    if (err) {
+      console.log(err.stack)
+    } else {
+      console.log(res.rows[0])
+    }
   })
+
 }
 
 app.get('/', function(req, res){//figure out how to bypass query check when queries aren't there
