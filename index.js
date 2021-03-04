@@ -62,7 +62,7 @@ function findID(req, res, next){
       }
     })
 
-    console.log(results[0]);
+    console.log(results);
     res.locals.id = results[0] + 1;
     next();
   }
