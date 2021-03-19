@@ -87,7 +87,7 @@ function findID(req, res, next){
     .catch(e => console.error(e.stack))
 
     console.log(results); //finding problems here, results return undefined try to find a way to get results
-    res.locals.id = results[0] + 1;
+    res.locals.id = results + 1;
     next();
   }
 
@@ -102,16 +102,33 @@ function addData(req, res, next){ //try to find way to load regular main page if
   var story = req.body.story + "";
   var id = res.locals.id + "";
 
-  const text = 'INSERT INTO stories(ID, NAME, COUNTRYNAME, COUNTRYID, STORY) VALUES($1, $2, $3, $4, $5) RETURNING *' //postgres query
-  var values = [id, name, countryName, countryID, story];
+  const text = 'INSERT INTO stories(id, name, countryname, countryid) VALUES($1, $2, $3, $4) RETURNING *'
+  const values = [id, name, countryName, countryID];
   // callback
   client.query(text, values, (err, res) => {
     if (err) {
       console.log(err.stack)
     } else {
       console.log(res.rows[0])
+      // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
     }
   })
+  // promise
+  client
+    .query(text, values)
+    .then(res => {
+      console.log(res.rows[0])
+      // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
+    })
+    .catch(e => console.error(e.stack))
+  // async/await
+  try {
+    const res = await client.query(text, values)
+    console.log(res.rows[0])
+    // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
+  } catch (err) {
+    console.log(err.stack)
+  }
 
 }
 
