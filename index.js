@@ -123,7 +123,7 @@ function addData(req, res, next){ //try to find way to load regular main page if
     .catch(e => console.error(e.stack))
   // async/await
   try {
-    const res = await client.query(text, values)
+    const res = client.query(text, values)
     console.log(res.rows[0])
     // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
   } catch (err) {
