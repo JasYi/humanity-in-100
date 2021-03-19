@@ -102,6 +102,8 @@ function addData(req, res, next){ //try to find way to load regular main page if
   var story = req.body.story + "";
   var id = res.locals.id + "";
 
+  console.log(id + "," + name + "," + countryName + "," + countryID);
+
   const text = 'INSERT INTO stories(id, name, countryname, countryid) VALUES($1, $2, $3, $4) RETURNING *'
   const values = [id, name, countryName, countryID];
   // callback
@@ -109,7 +111,7 @@ function addData(req, res, next){ //try to find way to load regular main page if
     if (err) {
       console.log(err.stack)
     } else {
-      console.log(res.rows[0])
+      //console.log(res.rows[0])
       // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
     }
   })
