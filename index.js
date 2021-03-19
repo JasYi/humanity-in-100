@@ -24,6 +24,7 @@ app.use(bodyParser.json())
 
 
 //postgreSQL setup
+/*
 const pool = new Pool({
   user: 'wulsybzdvojhgv',
   host: 'ec2-67-202-63-147.compute-1.amazonaws.com',
@@ -46,21 +47,47 @@ client.connect()
 client.query('SELECT NOW()', (err, res) => {
   console.log(err, res)
   client.end()
-})
+})*/
 
+const { Client } = require('pg');
 
-function findID(req, res, next){
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+client.connect();
+
+client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+  if (err) throw err;
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  }
+  client.end();
+});
+
+//end of postrgres connection
+
+function findID(req, res, ne  xt){
     console.log('test 1');
     var results;
-    const text = 'SELECT ID FROM stories' //postgres query
+    const text = 'SELECT ID FROM stories ORDER BY ID DESC' //postgres query
     // callback
     client.query(text, (err, res) => {
       if (err) {
         console.log(err.stack)
       } else {
-        results = res.rows;
+        results = res.rows[0];
+        console.log(results);
       }
     })
+    // promise
+    client
+    .query('SELECT NOW() as now')
+    .then(res => console.log(res.rows[0]))
+    .catch(e => console.error(e.stack))
 
     console.log(results); //finding problems here, results return undefined try to find a way to get results
     res.locals.id = results[0] + 1;
