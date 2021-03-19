@@ -3,7 +3,7 @@ var hbs = require('hbs');
 var path = require('path');
 var mysql = require('mysql');
 var bodyParser = require('body-parser');
-const { Pool, Client } = require('pg')
+const { Client } = require('pg');
 
 //PORT TO DIRECTOR FOR SQL TESTING
 
@@ -49,8 +49,6 @@ client.query('SELECT NOW()', (err, res) => {
   client.end()
 })*/
 
-const { Client } = require('pg');
-
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -70,7 +68,7 @@ client.query('SELECT table_schema,table_name FROM information_schema.tables;', (
 
 //end of postrgres connection
 
-function findID(req, res, ne  xt){
+function findID(req, res, next){
     console.log('test 1');
     var results;
     const text = 'SELECT ID FROM stories ORDER BY ID DESC' //postgres query
