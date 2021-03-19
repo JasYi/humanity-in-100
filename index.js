@@ -76,7 +76,7 @@ function findID(req, res, next){
       if (err) {
         console.log(err.stack)
       } else {
-        results = res.rows[0];
+        results = res;
         console.log(results);
       }
     })
