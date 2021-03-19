@@ -86,7 +86,7 @@ function findID(req, res, next){
     .then(res => console.log(res.rows[0]))
     .catch(e => console.error(e.stack))
 
-    console.log(results); //finding problems here, results return undefined try to find a way to get results
+    console.log(results + "brah plz work"); //finding problems here, results return undefined try to find a way to get results
     res.locals.id = results + 1;
     next();
   }
