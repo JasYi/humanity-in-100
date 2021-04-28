@@ -77,18 +77,19 @@ function findID(req, res, next){
         console.log(err.stack)
       } else {
         results = res.rows[0];
+        client
+        .query('SELECT NOW() as now')
+        .then(res => console.log(res.rows[0]))
+        .catch(e => console.error(e.stack))
+
+        console.log(results + "brah plz work"); //finding problems here, results return undefined try to find a way to get results
+        res.locals.id = results + 1;
+        console.log("line 80");
         console.log(results);
+        next();
       }
     })
     // promise
-    client
-    .query('SELECT NOW() as now')
-    .then(res => console.log(res.rows[0]))
-    .catch(e => console.error(e.stack))
-
-    console.log(results + "brah plz work"); //finding problems here, results return undefined try to find a way to get results
-    res.locals.id = results + 1;
-    next();
   }
 
 function addData(req, res, next){ //try to find way to load regular main page if no query and if there are queries then go into this one
