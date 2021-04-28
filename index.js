@@ -76,13 +76,13 @@ function findID(req, res, next){
       if (err) {
         console.log(err.stack)
       } else {
-        results = res.rows[0];
+        results = res.rows[0]["id"];
         client
         .query('SELECT NOW() as now')
         .then(res => console.log(res.rows[0]))
         .catch(e => console.error(e.stack))
 
-        console.log(results + "brah plz work"); //finding problems here, results return undefined try to find a way to get results
+        console.log(results); //finding problems here, results return undefined try to find a way to get results
         res.locals.id = results + 1;
         console.log("line 80");
         console.log(results);
